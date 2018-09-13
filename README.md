@@ -73,3 +73,8 @@ This will be especially helpful for an OS or a Compiler that may need to run in 
 
 **Where can I get more info on TypeScript**
 [Right this way!](http://www.typescriptlang.org/)
+
+Browser Testing
+===============
+
+I am currently testing and verifying with google chrome
