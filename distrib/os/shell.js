@@ -13,7 +13,7 @@
 // TODO: Write a base class / prototype for system services and let Shell inherit from it.
 var TSOS;
 (function (TSOS) {
-    var Shell = (function () {
+    var Shell = /** @class */ (function () {
         function Shell() {
             // Properties
             this.promptStr = ">";
@@ -89,13 +89,13 @@ var TSOS;
             }
             else {
                 // It's not found, so check for curses and apologies before declaring the command invalid.
-                if (this.curses.indexOf("[" + TSOS.Utils.rot13(cmd) + "]") >= 0) {
+                if (this.curses.indexOf("[" + TSOS.Utils.rot13(cmd) + "]") >= 0) { // Check for curses.
                     this.execute(this.shellCurse);
                 }
-                else if (this.apologies.indexOf("[" + cmd + "]") >= 0) {
+                else if (this.apologies.indexOf("[" + cmd + "]") >= 0) { // Check for apologies.
                     this.execute(this.shellApology);
                 }
-                else {
+                else { // It's just a bad command. {
                     this.execute(this.shellInvalidCommand);
                 }
             }
@@ -193,9 +193,54 @@ var TSOS;
                 var topic = args[0];
                 switch (topic) {
                     case "help":
-                        _StdOut.putText("Help displays a list of (hopefully) valid commands.");
+                        _StdOut.putText("These are a list of valid commands that can be used");
+                        for (var i in _OsShell.commandList) {
+                            _StdOut.advanceLine();
+                            _StdOut.putText("  " + _OsShell.commandList[i].command + " " + _OsShell.commandList[i].description);
+                        }
+                        _StdOut.advanceLine();
+                        _StdOut.putText("Enter: man (command name) for information  on a specific function");
                         break;
-                    // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
+                    case "ver":
+                        _StdOut.putText("Displays the version of the operating system");
+                        _StdOut.advanceLine();
+                        _StdOut.putText("Usage: ver.");
+                        break;
+                    case "help":
+                        _StdOut.putText("Lists the available commands and their descriptions");
+                        _StdOut.advanceLine();
+                        _StdOut.putText("Usage: help");
+                        break;
+                    case "shutdown":
+                        _StdOut.putText("Shuts down the OS but leaves the virtual system up");
+                        _StdOut.advanceLine();
+                        _StdOut.putText("Usage: shutdown");
+                        break;
+                    case "cls":
+                        _StdOut.putText("Clears the screen");
+                        _StdOut.advanceLine();
+                        _StdOut.putText("Usage: cls");
+                        break;
+                    case "man":
+                        _StdOut.putText("Provides a manual for how using the system including commands and how to use them");
+                        _StdOut.advanceLine();
+                        _StdOut.putText("Usage: man <topic>  Please supply a topic.");
+                        break;
+                    case "trace":
+                        _StdOut.putText("Toggles the OS trace");
+                        _StdOut.advanceLine();
+                        _StdOut.putText("Usage: trace <on | off>");
+                        break;
+                    case "rot13":
+                        _StdOut.putText("does a rot13 obfuscation on a string");
+                        _StdOut.advanceLine();
+                        _StdOut.putText("Usage: rot13 <string>  Please supply a string.");
+                        break;
+                    case "prompt":
+                        _StdOut.putText("Sets a prompt");
+                        _StdOut.advanceLine();
+                        _StdOut.putText("Usage: prompt <string>  Please supply a string.");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -247,6 +292,6 @@ var TSOS;
             }
         };
         return Shell;
-    })();
+    }());
     TSOS.Shell = Shell;
 })(TSOS || (TSOS = {}));
