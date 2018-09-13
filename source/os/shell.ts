@@ -22,6 +22,7 @@ module TSOS {
         public commandList = [];
         public curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
         public apologies = "[sorry]";
+        public name = "default user";
 
         constructor() {
         }
@@ -77,6 +78,30 @@ module TSOS {
             sc = new ShellCommand(this.shellPrompt,
                                   "prompt",
                                   "<string> - Sets the prompt.");
+            this.commandList[this.commandList.length] = sc;
+
+            // date
+            sc = new ShellCommand(this.shellDate,
+                "date",
+                "- Displays the current date.");
+            this.commandList[this.commandList.length] = sc;
+
+            // whereami
+            sc = new ShellCommand(this.shellWhereAmI,
+                "whereami",
+                "- Displays the users location.");
+            this.commandList[this.commandList.length] = sc;
+
+            // setName
+            sc = new ShellCommand(this.shellSetName,
+                "setname",
+                "<string> - Sets the users name to  <string>.");
+            this.commandList[this.commandList.length] = sc;
+
+            // getName
+            sc = new ShellCommand(this.shellGetName,
+                "getname",
+                "- Displays the users location.");
             this.commandList[this.commandList.length] = sc;
 
             // ps  - list the running processes and their IDs
@@ -332,6 +357,35 @@ module TSOS {
                 _StdOut.putText("Usage: prompt <string>  Please supply a string.");
             }
         }
+
+        public shellDate() {
+            var displayDate = new Date().toLocaleDateString();
+            _StdOut.putText("The current date is "+displayDate);
+        }
+
+        public shellWhereAmI() {
+            _StdOut.putText("Probing location...");
+            _StdOut.advanceLine();
+            _StdOut.putText("You are in the darkest depths of the Indian Ocean.");
+        }
+
+        public shellSetName(args) {
+
+            if (args.length > 0) {
+                _OsShell.name = "";
+                for (var i in args) {
+                    _OsShell.name += args[i] + " ";
+                }
+            } else {
+                _StdOut.putText("Usage: setname <string>  Please supply a string.");
+            }
+        }
+
+        public shellGetName() {
+            _StdOut.putText("Your name is "+_OsShell.name);
+        }
+
+
 
     }
 }

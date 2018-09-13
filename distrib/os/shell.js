@@ -20,6 +20,7 @@ var TSOS;
             this.commandList = [];
             this.curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
             this.apologies = "[sorry]";
+            this.name = "default user";
         }
         Shell.prototype.init = function () {
             var sc;
@@ -48,6 +49,18 @@ var TSOS;
             this.commandList[this.commandList.length] = sc;
             // prompt <string>
             sc = new TSOS.ShellCommand(this.shellPrompt, "prompt", "<string> - Sets the prompt.");
+            this.commandList[this.commandList.length] = sc;
+            // date
+            sc = new TSOS.ShellCommand(this.shellDate, "date", "- Displays the current date.");
+            this.commandList[this.commandList.length] = sc;
+            // whereami
+            sc = new TSOS.ShellCommand(this.shellWhereAmI, "whereami", "- Displays the users location.");
+            this.commandList[this.commandList.length] = sc;
+            // setName
+            sc = new TSOS.ShellCommand(this.shellSetName, "setname", "<string> - Sets the users name to  <string>.");
+            this.commandList[this.commandList.length] = sc;
+            // getName
+            sc = new TSOS.ShellCommand(this.shellGetName, "getname", "- Displays the users location.");
             this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
@@ -290,6 +303,29 @@ var TSOS;
             else {
                 _StdOut.putText("Usage: prompt <string>  Please supply a string.");
             }
+        };
+        Shell.prototype.shellDate = function () {
+            var displayDate = new Date().toLocaleDateString();
+            _StdOut.putText("The current date is " + displayDate);
+        };
+        Shell.prototype.shellWhereAmI = function () {
+            _StdOut.putText("Probing location...");
+            _StdOut.advanceLine();
+            _StdOut.putText("You are in the darkest depths of the Indian Ocean.");
+        };
+        Shell.prototype.shellSetName = function (args) {
+            if (args.length > 0) {
+                _OsShell.name = "";
+                for (var i in args) {
+                    _OsShell.name += args[i] + " ";
+                }
+            }
+            else {
+                _StdOut.putText("Usage: setname <string>  Please supply a string.");
+            }
+        };
+        Shell.prototype.shellGetName = function () {
+            _StdOut.putText("Your name is " + _OsShell.name);
         };
         return Shell;
     }());
