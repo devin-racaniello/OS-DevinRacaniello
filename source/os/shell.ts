@@ -23,6 +23,7 @@ module TSOS {
         public curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
         public apologies = "[sorry]";
         public name = "default user";
+        public status = "YES PLEASE";
 
         constructor() {
         }
@@ -102,6 +103,24 @@ module TSOS {
             sc = new ShellCommand(this.shellGetName,
                 "getname",
                 "- Displays the users location.");
+            this.commandList[this.commandList.length] = sc;
+
+            // updateStatus
+            sc = new ShellCommand(this.shellUpdateStatus,
+                "updatestatus",
+                "<string> - Updates the status with a <string>.");
+            this.commandList[this.commandList.length] = sc;
+
+            // break
+            sc = new ShellCommand(this.shellBreak,
+                "break",
+                "- We have broken him.");
+            this.commandList[this.commandList.length] = sc;
+
+            //load
+            sc = new ShellCommand(this.load,
+                "load",
+                "- Loads from taInput");
             this.commandList[this.commandList.length] = sc;
 
             // ps  - list the running processes and their IDs
@@ -383,6 +402,42 @@ module TSOS {
 
         public shellGetName() {
             _StdOut.putText("Your name is "+_OsShell.name);
+        }
+
+        public shellUpdateStatus(args) {
+            if (args.length > 0) {
+                _StdOut.putText("Status: "+args);
+                document.getElementById("divStatus").innerHTML = "Status: " + args;
+                this.status = args;
+            }
+        }
+
+        public shellBreak() {
+            _Kernel.krnTrapError("I feel dead inside.")
+        }
+
+        public load(){
+            var userInput = (document.getElementById("taProgramInput") as HTMLInputElement).value;
+            var valid = true;
+
+            for(var i = 0; i < userInput.length; i++) {
+                if (!((parseInt(userInput.charAt(i)) >= 0 && parseInt(userInput.charAt(i)) <= 9) ||
+                    ((userInput.charAt(i) >= "A") && (userInput.charAt(i) <= "F")) ||
+                    userInput.charAt(i) == " ")) {
+                    valid = false;
+                    break;
+                } else {
+                    valid = true;
+                }
+            }
+
+            if(valid){
+                _StdOut.putText("Valid");
+            } else {
+                _StdOut.putText("nah");
+            }
+
+
         }
 
 

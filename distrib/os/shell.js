@@ -21,6 +21,7 @@ var TSOS;
             this.curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
             this.apologies = "[sorry]";
             this.name = "default user";
+            this.status = "YES PLEASE";
         }
         Shell.prototype.init = function () {
             var sc;
@@ -61,6 +62,15 @@ var TSOS;
             this.commandList[this.commandList.length] = sc;
             // getName
             sc = new TSOS.ShellCommand(this.shellGetName, "getname", "- Displays the users location.");
+            this.commandList[this.commandList.length] = sc;
+            // updateStatus
+            sc = new TSOS.ShellCommand(this.shellUpdateStatus, "updatestatus", "<string> - Updates the status with a <string>.");
+            this.commandList[this.commandList.length] = sc;
+            // break
+            sc = new TSOS.ShellCommand(this.shellBreak, "break", "- We have broken him.");
+            this.commandList[this.commandList.length] = sc;
+            //load
+            sc = new TSOS.ShellCommand(this.load, "load", "- Loads from taInput");
             this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
@@ -326,6 +336,37 @@ var TSOS;
         };
         Shell.prototype.shellGetName = function () {
             _StdOut.putText("Your name is " + _OsShell.name);
+        };
+        Shell.prototype.shellUpdateStatus = function (args) {
+            if (args.length > 0) {
+                _StdOut.putText("Status: " + args);
+                document.getElementById("divStatus").innerHTML = "Status: " + args;
+                this.status = args;
+            }
+        };
+        Shell.prototype.shellBreak = function () {
+            _Kernel.krnTrapError("I feel dead inside.");
+        };
+        Shell.prototype.load = function () {
+            var userInput = document.getElementById("taProgramInput").value;
+            var valid = true;
+            for (var i = 0; i < userInput.length; i++) {
+                if (!((parseInt(userInput.charAt(i)) >= 0 && parseInt(userInput.charAt(i)) <= 9) ||
+                    ((userInput.charAt(i) >= "A") && (userInput.charAt(i) <= "F")) ||
+                    userInput.charAt(i) == " ")) {
+                    valid = false;
+                    break;
+                }
+                else {
+                    valid = true;
+                }
+            }
+            if (valid) {
+                _StdOut.putText("Valid");
+            }
+            else {
+                _StdOut.putText("nah");
+            }
         };
         return Shell;
     }());

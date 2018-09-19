@@ -36,6 +36,7 @@ var TSOS;
             _krnKeyboardDriver = new TSOS.DeviceDriverKeyboard(); // Construct it.
             _krnKeyboardDriver.driverEntry(); // Call the driverEntry() initialization routine.
             this.krnTrace(_krnKeyboardDriver.status);
+            document.getElementById("divStatus").innerHTML = "Status: ";
             //
             // ... more?
             //
@@ -151,9 +152,15 @@ var TSOS;
                     TSOS.Control.hostLog(msg, "OS");
                 }
             }
+            var date = new Date().toLocaleDateString();
+            var time = new Date();
+            document.getElementById("divDate").innerHTML = "Date: " + date + " Time:" + time.getHours() + ": " + time.getMinutes() + ": " + time.getSeconds();
         };
         Kernel.prototype.krnTrapError = function (msg) {
             TSOS.Control.hostLog("OS ERROR - TRAP: " + msg);
+            _DrawingContext.fillStyle = 'blue';
+            _DrawingContext.fillRect(0, 0, _Canvas.width, _Canvas.height);
+            _StdOut.putText(msg);
             // TODO: Display error on console, perhaps in some sort of colored screen. (Maybe blue?)
             this.krnShutdown();
         };
