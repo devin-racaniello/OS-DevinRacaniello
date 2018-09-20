@@ -63,6 +63,51 @@ module TSOS {
                     //TODO: handle keycodes
                     case 48:
                         _StdOut.putText(")");
+                        break;
+                    case 49:
+                        _StdOut.putText("!");
+                        break;
+                    case 50:
+                        _StdOut.putText("@");
+                        break;
+                    case 51:
+                        _StdOut.putText("#");
+                        break;
+                    case 52:
+                        _StdOut.putText("$");
+                        break;
+                    case 53:
+                        _StdOut.putText("%");
+                        break;
+                    case 54:
+                        _StdOut.putText("^");
+                        break;
+                    case 55:
+                        _StdOut.putText("&");
+                        break;
+                    case 56:
+                        _StdOut.putText("*");
+                        break;
+                    case 57:
+                        _StdOut.putText("(");
+                        break;
+
+                    case 187:
+                        _StdOut.putText("=");
+                        break;
+                    case 188:
+                        _StdOut.putText(",");
+                        break;
+                    case 189:
+                        _StdOut.putText("-");
+                        break;
+                    case 190:
+                        _StdOut.putText(".");
+                        break;
+                    case 191:
+                        _StdOut.putText("/");
+                        break;
+
                 }
 
             }

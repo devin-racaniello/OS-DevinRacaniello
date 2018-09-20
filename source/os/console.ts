@@ -17,7 +17,10 @@ module TSOS {
                     public currentFontSize = _DefaultFontSize,
                     public currentXPosition = 0,
                     public currentYPosition = _DefaultFontSize,
-                    public buffer = "") {
+                    public buffer = "",
+                    public commandHistory = [],
+                    public commandCounter = 0,
+                    public tabCounter = 0) {
         }
 
         public init(): void {
@@ -27,6 +30,10 @@ module TSOS {
 
         private clearScreen(): void {
             _DrawingContext.clearRect(0, 0, _Canvas.width, _Canvas.height);
+        }
+
+        private clearLine(): void {
+            _DrawingContext.clearRect(0, this.currentYPosition-14, _Canvas.width, _Canvas.height);
         }
 
         private resetXY(): void {
@@ -43,14 +50,57 @@ module TSOS {
                     // The enter key marks the end of a console command, so ...
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
+                    this.commandHistory.push(this.buffer);
+                    this.commandCounter = this.commandHistory.length;
+                    this.tabCounter = 0;
                     // ... and reset our buffer.
                     this.buffer = "";
-                } else if (chr === String.fromCharCode(8)) { //     Enter key
+                } else if (chr === String.fromCharCode(8)) { //     delete key
                     this.buffer = this.buffer.substring(0,this.buffer.length-1);
-                    _DrawingContext.clearRect(0, this.currentYPosition-13, this.currentXPosition, this.currentYPosition);
+                    _DrawingContext.clearRect(0, this.currentYPosition-14, this.currentXPosition, this.currentYPosition);
 
                     this.currentXPosition = 0;
                     this.putText(_OsShell.promptStr+this.buffer);
+
+
+                } else if(chr === String.fromCharCode(38)&&this.commandCounter > 0){
+                    this.currentXPosition = 0;
+                    this.commandCounter -= 1;
+                    this.clearLine();
+                    this.putText(_OsShell.promptStr+this.commandHistory[this.commandCounter]);
+
+
+                } else if(chr === String.fromCharCode(40)&&this.commandCounter < this.commandHistory.length){
+                    this.currentXPosition = 0;
+                    this.commandCounter += 1;
+                    this.clearLine();
+                    this.putText(_OsShell.promptStr+this.commandHistory[this.commandCounter]);
+
+
+                } else if(chr === String.fromCharCode(9)){
+
+                    var possibleCommands = [];
+                    for(var i in _OsShell.commandList){
+                        if (this.buffer == _OsShell.commandList[i].command.substring(0,this.buffer.length)){
+                            possibleCommands.push(_OsShell.commandList[i].command);
+
+                        }
+                        //this.putText("buffer: " +this.buffer);
+                        //this.advanceLine();
+                        //this.putText("checker: " +_OsShell.commandList[i].command.substring(0,this.buffer.length));
+                        //this.advanceLine();
+
+                    }
+                    if (possibleCommands.length > 0){
+                        this.currentXPosition = 0;
+                        this.clearLine();
+                        this.buffer = possibleCommands[this.tabCounter];
+                        this.putText(_OsShell.promptStr+possibleCommands[this.tabCounter]);
+                        this.tabCounter += 1;
+                    }
+
+
+
 
 
                 } else {
@@ -59,6 +109,7 @@ module TSOS {
                     this.putText(chr);
                     // ... and add it to our buffer.
                     this.buffer += chr;
+                    this.tabCounter = 0;
                 }
                 // TODO: Write a case for Ctrl-C.
             }

@@ -23,7 +23,7 @@ module TSOS {
         public curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
         public apologies = "[sorry]";
         public name = "default user";
-        public status = "YES PLEASE"
+        public status = "YES PLEASE";
 
         constructor() {
         }

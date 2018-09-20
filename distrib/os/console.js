@@ -10,17 +10,23 @@
 var TSOS;
 (function (TSOS) {
     var Console = /** @class */ (function () {
-        function Console(currentFont, currentFontSize, currentXPosition, currentYPosition, buffer) {
+        function Console(currentFont, currentFontSize, currentXPosition, currentYPosition, buffer, commandHistory, commandCounter, tabCounter) {
             if (currentFont === void 0) { currentFont = _DefaultFontFamily; }
             if (currentFontSize === void 0) { currentFontSize = _DefaultFontSize; }
             if (currentXPosition === void 0) { currentXPosition = 0; }
             if (currentYPosition === void 0) { currentYPosition = _DefaultFontSize; }
             if (buffer === void 0) { buffer = ""; }
+            if (commandHistory === void 0) { commandHistory = []; }
+            if (commandCounter === void 0) { commandCounter = 0; }
+            if (tabCounter === void 0) { tabCounter = 0; }
             this.currentFont = currentFont;
             this.currentFontSize = currentFontSize;
             this.currentXPosition = currentXPosition;
             this.currentYPosition = currentYPosition;
             this.buffer = buffer;
+            this.commandHistory = commandHistory;
+            this.commandCounter = commandCounter;
+            this.tabCounter = tabCounter;
         }
         Console.prototype.init = function () {
             this.clearScreen();
@@ -28,6 +34,9 @@ var TSOS;
         };
         Console.prototype.clearScreen = function () {
             _DrawingContext.clearRect(0, 0, _Canvas.width, _Canvas.height);
+        };
+        Console.prototype.clearLine = function () {
+            _DrawingContext.clearRect(0, this.currentYPosition - 14, _Canvas.width, _Canvas.height);
         };
         Console.prototype.resetXY = function () {
             this.currentXPosition = 0;
@@ -42,14 +51,48 @@ var TSOS;
                     // The enter key marks the end of a console command, so ...
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
+                    this.commandHistory.push(this.buffer);
+                    this.commandCounter = this.commandHistory.length;
+                    this.tabCounter = 0;
                     // ... and reset our buffer.
                     this.buffer = "";
                 }
-                else if (chr === String.fromCharCode(8)) { //     Enter key
+                else if (chr === String.fromCharCode(8)) { //     delete key
                     this.buffer = this.buffer.substring(0, this.buffer.length - 1);
-                    _DrawingContext.clearRect(0, this.currentYPosition - 13, this.currentXPosition, this.currentYPosition);
+                    _DrawingContext.clearRect(0, this.currentYPosition - 14, this.currentXPosition, this.currentYPosition);
                     this.currentXPosition = 0;
                     this.putText(_OsShell.promptStr + this.buffer);
+                }
+                else if (chr === String.fromCharCode(38) && this.commandCounter > 0) {
+                    this.currentXPosition = 0;
+                    this.commandCounter -= 1;
+                    this.clearLine();
+                    this.putText(_OsShell.promptStr + this.commandHistory[this.commandCounter]);
+                }
+                else if (chr === String.fromCharCode(40) && this.commandCounter < this.commandHistory.length) {
+                    this.currentXPosition = 0;
+                    this.commandCounter += 1;
+                    this.clearLine();
+                    this.putText(_OsShell.promptStr + this.commandHistory[this.commandCounter]);
+                }
+                else if (chr === String.fromCharCode(9)) {
+                    var possibleCommands = [];
+                    for (var i in _OsShell.commandList) {
+                        if (this.buffer == _OsShell.commandList[i].command.substring(0, this.buffer.length)) {
+                            possibleCommands.push(_OsShell.commandList[i].command);
+                        }
+                        //this.putText("buffer: " +this.buffer);
+                        //this.advanceLine();
+                        //this.putText("checker: " +_OsShell.commandList[i].command.substring(0,this.buffer.length));
+                        //this.advanceLine();
+                    }
+                    if (possibleCommands.length > 0) {
+                        this.currentXPosition = 0;
+                        this.clearLine();
+                        this.buffer = possibleCommands[this.tabCounter];
+                        this.putText(_OsShell.promptStr + possibleCommands[this.tabCounter]);
+                        this.tabCounter += 1;
+                    }
                 }
                 else {
                     // This is a "normal" character, so ...
@@ -57,6 +100,7 @@ var TSOS;
                     this.putText(chr);
                     // ... and add it to our buffer.
                     this.buffer += chr;
+                    this.tabCounter = 0;
                 }
                 // TODO: Write a case for Ctrl-C.
             }
