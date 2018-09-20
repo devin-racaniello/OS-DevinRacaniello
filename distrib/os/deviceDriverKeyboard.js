@@ -60,11 +60,21 @@ var TSOS;
                 // TODO: Check for caps-lock and handle as shifted if so.
                 _KernelInputQueue.enqueue(chr);
             }
-            else if (((keyCode >= 48) && (keyCode <= 57)) || // digits
+            else if (((keyCode >= 48) && (keyCode <= 57) && (!isShifted)) || // digits
                 (keyCode == 32) || // space
-                (keyCode == 13)) { // enter
+                (keyCode == 13) || // enter
+                (keyCode == 8) || (keyCode == 9) || // backspace //tab
+                (keyCode == 38) || (keyCode == 40)) { // upArrow //downArrow
                 chr = String.fromCharCode(keyCode);
                 _KernelInputQueue.enqueue(chr);
+            }
+            else if ((((keyCode >= 48) && (keyCode <= 57)) && isShifted) || //shifted digits
+                (((keyCode >= 187) && (keyCode <= 191)))) { //punctuation
+                switch (keyCode) {
+                    //TODO: handle keycodes
+                    case 48:
+                        _StdOut.putText(")");
+                }
             }
         };
         return DeviceDriverKeyboard;

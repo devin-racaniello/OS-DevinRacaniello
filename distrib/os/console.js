@@ -45,6 +45,12 @@ var TSOS;
                     // ... and reset our buffer.
                     this.buffer = "";
                 }
+                else if (chr === String.fromCharCode(8)) { //     Enter key
+                    this.buffer = this.buffer.substring(0, this.buffer.length - 1);
+                    _DrawingContext.clearRect(0, this.currentYPosition - 13, this.currentXPosition, this.currentYPosition);
+                    this.currentXPosition = 0;
+                    this.putText(_OsShell.promptStr + this.buffer);
+                }
                 else {
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...
@@ -82,7 +88,14 @@ var TSOS;
             this.currentYPosition += _DefaultFontSize +
                 _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                 _FontHeightMargin;
-            // TODO: Handle scrolling. (iProject 1)
+            if (this.currentYPosition >= _Canvas.height) {
+                var imageData = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
+                this.clearScreen();
+                this.currentYPosition -= (_DefaultFontSize
+                    + _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) + _FontHeightMargin);
+                _DrawingContext.putImageData(imageData, 0, -(_DefaultFontSize
+                    + _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) + _FontHeightMargin));
+            }
         };
         return Console;
     }());

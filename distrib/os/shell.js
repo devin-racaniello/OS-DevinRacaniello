@@ -111,8 +111,7 @@ var TSOS;
                 this.execute(fn, args);
             }
             else if (cmd == "v" || cmd == "version") {
-                _StdOut.advanceLine();
-                this.shellVer(args);
+                this.execute(this.shellVer, args);
             }
             else {
                 // It's not found, so check for curses and apologies before declaring the command invalid.

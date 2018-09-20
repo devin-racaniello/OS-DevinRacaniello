@@ -23,7 +23,7 @@ module TSOS {
         public curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
         public apologies = "[sorry]";
         public name = "default user";
-        public status = "YES PLEASE";
+        public status = "YES PLEASE"
 
         constructor() {
         }
@@ -163,8 +163,7 @@ module TSOS {
             if (found) {
                 this.execute(fn, args);
             } else if(cmd == "v" || cmd == "version") {
-                _StdOut.advanceLine();
-                this.shellVer(args);
+                this.execute(this.shellVer, args);
             } else {
                 // It's not found, so check for curses and apologies before declaring the command invalid.
                 if (this.curses.indexOf("[" + Utils.rot13(cmd) + "]") >= 0) {     // Check for curses.
