@@ -67,12 +67,14 @@ var TSOS;
                     this.currentXPosition = 0;
                     this.commandCounter -= 1;
                     this.clearLine();
+                    this.buffer = this.commandHistory[this.commandCounter];
                     this.putText(_OsShell.promptStr + this.commandHistory[this.commandCounter]);
                 }
                 else if (chr === String.fromCharCode(40) && this.commandCounter < this.commandHistory.length) {
                     this.currentXPosition = 0;
                     this.commandCounter += 1;
                     this.clearLine();
+                    this.buffer = this.commandHistory[this.commandCounter];
                     this.putText(_OsShell.promptStr + this.commandHistory[this.commandCounter]);
                 }
                 else if (chr === String.fromCharCode(9)) {
