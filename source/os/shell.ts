@@ -162,6 +162,9 @@ module TSOS {
             }
             if (found) {
                 this.execute(fn, args);
+            } else if(cmd == "v" || cmd == "version") {
+                _StdOut.advanceLine();
+                this.shellVer(args);
             } else {
                 // It's not found, so check for curses and apologies before declaring the command invalid.
                 if (this.curses.indexOf("[" + Utils.rot13(cmd) + "]") >= 0) {     // Check for curses.
@@ -251,7 +254,7 @@ module TSOS {
         }
 
         public shellVer(args) {
-            _StdOut.putText(APP_NAME + " version " + APP_VERSION);
+            _StdOut.putText(APP_NAME + " Version: " + APP_VERSION);
         }
 
         public shellHelp(args) {

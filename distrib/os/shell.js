@@ -110,6 +110,10 @@ var TSOS;
             if (found) {
                 this.execute(fn, args);
             }
+            else if (cmd == "v" || cmd == "version") {
+                _StdOut.advanceLine();
+                this.shellVer(args);
+            }
             else {
                 // It's not found, so check for curses and apologies before declaring the command invalid.
                 if (this.curses.indexOf("[" + TSOS.Utils.rot13(cmd) + "]") >= 0) { // Check for curses.
@@ -192,7 +196,7 @@ var TSOS;
             }
         };
         Shell.prototype.shellVer = function (args) {
-            _StdOut.putText(APP_NAME + " version " + APP_VERSION);
+            _StdOut.putText(APP_NAME + " Version: " + APP_VERSION);
         };
         Shell.prototype.shellHelp = function (args) {
             _StdOut.putText("Commands:");
