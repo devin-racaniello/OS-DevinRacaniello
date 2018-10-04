@@ -15,6 +15,7 @@
    <script type="text/javascript" src="distrib/host/control.js"></script>
    <script type="text/javascript" src="distrib/host/devices.js"></script>
    <script type="text/javascript" src="distrib/host/cpu.js"></script>
+   <script type="text/javascript" src="distrib/host/memory.js"></script>
 
    <!-- Virtual OS Routines: Make sure Kernel code is last, since it needs those above it. -->
    <script type="text/javascript" src="distrib/os/interrupt.js"></script>
@@ -67,6 +68,8 @@
              onclick="TSOS.Control.hostBtnReset_click(this);">
    </div>
 
+
+
    <div id="divDate" style="margin:4px; width:500px; height:50px; float:left;">
       Date:
    </div>
@@ -83,7 +86,7 @@
       </canvas>
    </div>
 
-   <div id="divLog" style="margin-left:520px;">
+   <div id="divLog" style=" margin-left:520px;">
       <label>
          Host Log
          <br>
@@ -95,17 +98,30 @@
       </label>
    </div>
 
-   <div id="divUserProgramInput" style="margin-left:520px;">
-      <label>
-         User Program Input
-         <br>
-         <textarea name="taProgramInput"
-                   id  ="taProgramInput"
-                   rows="8"
-                   cols="48"
-         ></textarea>
-      </label>
-   </div>
+    <div id="divUserProgramInput" style="margin-left:520px;">
+        <label>
+            User Program Input
+            <br>
+            <textarea name="taProgramInput"
+                      id  ="taProgramInput"
+                      rows="8"
+                      cols="48"
+            ></textarea>
+        </label>
+    </div>
+
+    <div id="divMemory" style="margin-left:520px;">
+        <label>
+            Memory
+            <br>
+            <textarea name="memDisp"
+                      id  ="memDisp"
+                      rows="8"
+                      cols="56"
+            ></textarea>
+        </label>
+    </div>
+
 </div>
 
 <p class="footerText" style="clear:both;">

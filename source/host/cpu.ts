@@ -19,6 +19,7 @@ module TSOS {
 
     export class Cpu {
 
+
         constructor(public PC: number = 0,
                     public Acc: number = 0,
                     public Xreg: number = 0,
@@ -35,6 +36,9 @@ module TSOS {
             this.Yreg = 0;
             this.Zflag = 0;
             this.isExecuting = false;
+
+
+
         }
 
         public cycle(): void {

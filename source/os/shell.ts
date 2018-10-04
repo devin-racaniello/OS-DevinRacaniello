@@ -23,7 +23,7 @@ module TSOS {
         public curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
         public apologies = "[sorry]";
         public name = "default user";
-        public status = "YES PLEASE";
+
 
         constructor() {
         }
@@ -390,17 +390,19 @@ module TSOS {
             _StdOut.putText("You are in the darkest depths of the Indian Ocean.");
         }
 
-        public shellSetName(args) {
 
+        public shellSetName(args) {
             if (args.length > 0) {
-                _OsShell.name = "";
+                var text = "";
                 for (var i in args) {
-                    _OsShell.name += args[i] + " ";
+                    text += args[i] + " ";
                 }
+                _OsShell.name = text;
             } else {
                 _StdOut.putText("Usage: setname <string>  Please supply a string.");
             }
         }
+
 
         public shellGetName() {
             _StdOut.putText("Your name is "+_OsShell.name);
@@ -408,9 +410,13 @@ module TSOS {
 
         public shellUpdateStatus(args) {
             if (args.length > 0) {
-                _StdOut.putText("Status: "+args);
-                document.getElementById("divStatus").innerHTML = "Status: " + args;
-                this.status = args;
+                var text = "";
+                for (var i in args) {
+                    text += args[i] + " ";
+                }
+                _StdOut.putText("Status: "+text);
+                document.getElementById("divStatus").innerHTML = "Status: " + text;
+                _Status = text;
             }
         }
 
@@ -438,6 +444,9 @@ module TSOS {
             } else {
                 _StdOut.putText("nah");
             }
+
+            _StdOut.putText("PID: "+_PID);
+            _PID ++;
 
 
         }

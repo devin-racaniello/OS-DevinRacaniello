@@ -21,7 +21,6 @@ var TSOS;
             this.curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
             this.apologies = "[sorry]";
             this.name = "default user";
-            this.status = "YES PLEASE";
         }
         Shell.prototype.init = function () {
             var sc;
@@ -328,10 +327,11 @@ var TSOS;
         };
         Shell.prototype.shellSetName = function (args) {
             if (args.length > 0) {
-                _OsShell.name = "";
+                var text = "";
                 for (var i in args) {
-                    _OsShell.name += args[i] + " ";
+                    text += args[i] + " ";
                 }
+                _OsShell.name = text;
             }
             else {
                 _StdOut.putText("Usage: setname <string>  Please supply a string.");
@@ -342,9 +342,13 @@ var TSOS;
         };
         Shell.prototype.shellUpdateStatus = function (args) {
             if (args.length > 0) {
-                _StdOut.putText("Status: " + args);
-                document.getElementById("divStatus").innerHTML = "Status: " + args;
-                this.status = args;
+                var text = "";
+                for (var i in args) {
+                    text += args[i] + " ";
+                }
+                _StdOut.putText("Status: " + text);
+                document.getElementById("divStatus").innerHTML = "Status: " + text;
+                _Status = text;
             }
         };
         Shell.prototype.shellBreak = function () {
@@ -370,6 +374,8 @@ var TSOS;
             else {
                 _StdOut.putText("nah");
             }
+            _StdOut.putText("PID: " + _PID);
+            _PID++;
         };
         return Shell;
     }());
