@@ -23,6 +23,7 @@ module TSOS {
         public ar = [];
         public ur = [];
         public processTable = [];
+        public assemblyCommands = [];
 
 
 
@@ -44,6 +45,51 @@ module TSOS {
             this.isExecuting = false;
 
             this.ar[0] = new CpuInput("00",["00","00"]);
+
+            var ac;
+
+            ac = new CpuInput("A9", ["00"]);
+            this.assemblyCommands[this.assemblyCommands.length] = ac;
+
+            ac = new CpuInput("AD", ["00","00"]);
+            this.assemblyCommands[this.assemblyCommands.length] = ac;
+
+            ac = new CpuInput("8D", ["00","00"]);
+            this.assemblyCommands[this.assemblyCommands.length] = ac;
+
+            ac = new CpuInput("6D", ["00","00"]);
+            this.assemblyCommands[this.assemblyCommands.length] = ac;
+
+            ac = new CpuInput("A2", ["00"]);
+            this.assemblyCommands[this.assemblyCommands.length] = ac;
+
+            ac = new CpuInput("AE", ["00","00"]);
+            this.assemblyCommands[this.assemblyCommands.length] = ac;
+
+            ac = new CpuInput("A0", ["00"]);
+            this.assemblyCommands[this.assemblyCommands.length] = ac;
+
+            ac = new CpuInput("AC", ["00","00"]);
+            this.assemblyCommands[this.assemblyCommands.length] = ac;
+
+            ac = new CpuInput("EA", []);
+            this.assemblyCommands[this.assemblyCommands.length] = ac;
+
+            ac = new CpuInput("00", []);
+            this.assemblyCommands[this.assemblyCommands.length] = ac;
+
+            ac = new CpuInput("EC", ["00","00"]);
+            this.assemblyCommands[this.assemblyCommands.length] = ac;
+
+            ac = new CpuInput("D0", ["00"]);
+            this.assemblyCommands[this.assemblyCommands.length] = ac;
+
+            ac = new CpuInput("EE", ["00","00"]);
+            this.assemblyCommands[this.assemblyCommands.length] = ac;
+
+            ac = new CpuInput("FF", ["00"]);
+            this.assemblyCommands[this.assemblyCommands.length] = ac;
+
 
 
 
@@ -137,13 +183,13 @@ module TSOS {
             var commandArray = [];
             var com = "ZZ";
             var con = [];
+            var doCon = 0;
             var comprox;
 
-            tempArray.push("00");
             this.ur = tempArray;
             this.displayCPU()
 
-            for (var i = 0; i < tempArray.length; i+=1) {
+            /*for (var i = 0; i < tempArray.length; i+=1) {
                 if ((tempArray[i].charAt(0) >= "A") && (tempArray[i].charAt(0) <= "F") || (tempArray[i].charAt(1) >= "A") && (tempArray[i].charAt(1) <= "F")) {
                     if (com !== "ZZ"){
                         comprox = new CpuInput(com,con);
@@ -158,6 +204,36 @@ module TSOS {
                 } else {
                     con.push(tempArray[i]);
                 }
+            }*/
+
+            for (var i = 0; i < tempArray.length; i++) {
+                if (doCon < 1) {
+                    for (var j = 0; j < this.assemblyCommands.length; j++) {
+                        if (tempArray[i] == this.assemblyCommands[j].command) {
+
+                            //only adds the commands once all the contents are available
+                            if (com !== "ZZ"){
+                                comprox = new CpuInput(com,con);
+                                commandArray.push(comprox);
+                                con = [];
+                            }
+
+                            com = tempArray[i];
+                            doCon = this.assemblyCommands[j].contents.length;
+                            break;
+                        }
+                    }
+                } else {
+                    con.push(tempArray[i]);
+                    doCon -= 1;
+                    if (i == tempArray.length - 1) {
+                        comprox = new CpuInput(com,con);
+                        commandArray.push(comprox);
+                    }
+                }
+
+
+
             }
 
             /*for (var i = 0; i <= input.length; i+=1){
@@ -189,16 +265,21 @@ module TSOS {
         public excecuteCommand(PID) {
 
             var commandArray = this.parseCommand(this.codeFromMem(PID));
+            this.clearCode(PID);
+            var breaker = false;
 
 
             for (var i = 0; i < commandArray.length; i+=1) {
+                if (breaker == true){
+                    break;
+                }
                 switch (commandArray[i].command) {
                     case "A9":
                         this.setAcc(parseInt(commandArray[i].contents[0]));
                         break;
 
                     case "AD":
-                        this.setAcc(_MemoryAccesor.getMemory(parseInt(commandArray[i].contents[1]+commandArray[i].contents[0])));
+                        this.setAcc(_MemoryAccesor.getMemory(parseInt(commandArray[i].contents[1]+commandArray[i].contents[0])).value);
                         break;
 
                     case "8D":
@@ -206,7 +287,7 @@ module TSOS {
                         break;
 
                     case "6D":
-                        this.setAcc(this.Acc + _MemoryAccesor.getMemory(parseInt(commandArray[i].contents[1]+commandArray[i].contents[0])));
+                        this.setAcc(this.Acc + _MemoryAccesor.getMemory(parseInt(commandArray[i].contents[1]+commandArray[i].contents[0])).value);
                         break;
 
                     case "A2":
@@ -214,7 +295,7 @@ module TSOS {
                         break;
 
                     case "AE":
-                        this.setX(_MemoryAccesor.getMemory(parseInt(commandArray[i].contents[1]+commandArray[i].contents[0])));
+                        this.setX(_MemoryAccesor.getMemory(parseInt(commandArray[i].contents[1]+commandArray[i].contents[0])).value);
                         break;
 
                     case "A0":
@@ -225,16 +306,14 @@ module TSOS {
                         this.setY(_MemoryAccesor.getMemory(parseInt(commandArray[i].contents[1]+commandArray[i].contents[0])));
                         break;
 
-                    case "EA":
-                        //this.setAcc(command[1]);
-                        break;
-
                     case "00":
-                        //this.setAcc(command[1]);
+                        breaker = true;
                         break;
 
                     case "EC":
-                        //this.setAcc(command[1]);
+                        if (this.Xreg == _MemoryAccesor.getMemory(parseInt(commandArray[i].contents[1]+commandArray[i].contents[0])).value){
+                            this.Zflag = 0;
+                        }
                         break;
 
                     case "D0":
@@ -242,11 +321,25 @@ module TSOS {
                         break;
 
                     case "EE":
-                        //this.setAcc(command[1]);
+                        _MemoryAccesor.setMemory(
+                            _MemoryAccesor.getMemory(parseInt(commandArray[i].contents[1]+commandArray[i].contents[0])).value+1,
+                            parseInt(commandArray[i].contents[1]+commandArray[i].contents[0]));
                         break;
 
                     case "FF":
-                        //this.setAcc(command[1]);
+                        if(this.Xreg == 1) {
+                            return this.Yreg;
+                        }
+                        if(this.Xreg == 2) {
+                            var j = 0;
+                            var output = "";
+                            while (_MemoryAccesor.getMemory(parseInt(commandArray[i].contents[1]+commandArray[i].contents[0])).value+j !== "00" ){
+
+                                output += _MemoryAccesor.getMemory(parseInt(commandArray[i].contents[1]+commandArray[i].contents[0])).value+j
+                                j++
+                            }
+                            return output;//00terminated string at y
+                        }
                         break;
 
                 }
