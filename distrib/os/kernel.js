@@ -1,6 +1,6 @@
 ///<reference path="../globals.ts" />
 ///<reference path="queue.ts" />
-///<reference path="../host/memory.ts"/>
+///<reference path="../host/memoryAccessor.ts" />
 /* ------------
      Kernel.ts
 
@@ -29,8 +29,10 @@ var TSOS;
             // Initialize the console.
             _Console = new TSOS.Console(); // The command line interface / console I/O device.
             _Console.init();
-            _Memory = new TSOS.Memory();
-            _Memory.init();
+            _MemoryAccesor = new TSOS.MemoryAccessor();
+            _MemoryAccesor.init();
+            _MemoryAccesor.memDisplay();
+            _CPU.displayCPU();
             // Initialize standard input and output to the _Console.
             _StdIn = _Console;
             _StdOut = _Console;
@@ -40,7 +42,6 @@ var TSOS;
             _krnKeyboardDriver.driverEntry(); // Call the driverEntry() initialization routine.
             this.krnTrace(_krnKeyboardDriver.status);
             document.getElementById("divStatus").innerHTML = "Status: " + _Status;
-            this.memDisplay();
             //
             // ... more?
             //
@@ -167,16 +168,6 @@ var TSOS;
             _StdOut.putText(msg);
             // TODO: Display error on console, perhaps in some sort of colored screen. (Maybe blue?)
             this.krnShutdown();
-        };
-        Kernel.prototype.memDisplay = function () {
-            var mem = "";
-            for (var i = 0; i < _Memory.memoryArray.length; i++) {
-                if (i % 10 == 0 && i != 0) {
-                    mem += "\n";
-                }
-                mem += "[" + _Memory.memoryArray[i] + "] ";
-            }
-            document.getElementById("memDisp").innerHTML = mem;
         };
         return Kernel;
     }());

@@ -14,8 +14,12 @@
    <!-- Host (Virtual Machine / Hardware Simulation) Routines -->
    <script type="text/javascript" src="distrib/host/control.js"></script>
    <script type="text/javascript" src="distrib/host/devices.js"></script>
+   <script type="text/javascript" src="distrib/host/cpuInput.js"></script>
+   <script type="text/javascript" src="distrib/host/pcb.js"></script>
    <script type="text/javascript" src="distrib/host/cpu.js"></script>
    <script type="text/javascript" src="distrib/host/memory.js"></script>
+   <script type="text/javascript" src="distrib/host/memoryAccessor.js"></script>
+
 
    <!-- Virtual OS Routines: Make sure Kernel code is last, since it needs those above it. -->
    <script type="text/javascript" src="distrib/os/interrupt.js"></script>
@@ -86,7 +90,7 @@
       </canvas>
    </div>
 
-   <div id="divLog" style=" margin-left:520px;">
+   <div id="divLog" style= "margin:4px; width:400px; float:left;">
       <label>
          Host Log
          <br>
@@ -98,7 +102,7 @@
       </label>
    </div>
 
-    <div id="divUserProgramInput" style="margin-left:520px;">
+    <div id="divUserProgramInput" style= "margin:4px; width:400px; float:left;">
         <label>
             User Program Input
             <br>
@@ -110,7 +114,7 @@
         </label>
     </div>
 
-    <div id="divMemory" style="margin-left:520px;">
+    <div id="divMemory" style= "margin:4px; width:400px; float:left;">
         <label>
             Memory
             <br>
@@ -118,6 +122,30 @@
                       id  ="memDisp"
                       rows="8"
                       cols="56"
+            ></textarea>
+        </label>
+    </div>
+
+    <div id="divCPU" style= "margin:4px; width:400px; float:left;">
+        <label>
+            CPU
+            <br>
+            <textarea name="cpuDisp"
+                      id  ="cpuDisp"
+                      rows="2"
+                      cols="30"
+            ></textarea>
+        </label>
+    </div>
+
+    <div id="divProcessTable" style= "margin:4px; width:400px; float:left;">
+        <label>
+            CPU
+            <br>
+            <textarea name="cpuTable"
+                      id  ="cpuTable"
+                      rows="6"
+                      cols="40"
             ></textarea>
         </label>
     </div>

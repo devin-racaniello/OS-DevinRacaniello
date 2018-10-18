@@ -1,22 +1,12 @@
-///<reference path="../globals.ts" />
-/* ------------
-     Memory.ts
-
-     Requires globals.ts
-
-
-     ------------ */
 var TSOS;
 (function (TSOS) {
     var Memory = /** @class */ (function () {
-        function Memory() {
-            this.memoryArray = new Array(9999);
+        function Memory(value, location) {
+            if (value === void 0) { value = "00"; }
+            if (location === void 0) { location = 0; }
+            this.value = value;
+            this.location = location;
         }
-        Memory.prototype.init = function () {
-            for (var i = 0; i < this.memoryArray.length; i++) {
-                this.memoryArray[i] = "00";
-            }
-        };
         return Memory;
     }());
     TSOS.Memory = Memory;

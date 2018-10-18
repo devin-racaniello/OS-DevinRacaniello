@@ -1,6 +1,7 @@
 ///<reference path="../globals.ts" />
 ///<reference path="queue.ts" />
-///<reference path="../host/memory.ts"/>
+///<reference path="../host/memoryAccessor.ts" />
+
 
 /* ------------
      Kernel.ts
@@ -32,8 +33,14 @@ module TSOS {
             _Console = new Console();          // The command line interface / console I/O device.
             _Console.init();
 
-            _Memory = new Memory();
-            _Memory.init();
+            _MemoryAccesor = new MemoryAccessor();
+            _MemoryAccesor.init();
+
+            _MemoryAccesor.memDisplay()
+
+            _CPU.displayCPU();
+
+
 
             // Initialize standard input and output to the _Console.
             _StdIn  = _Console;
@@ -47,7 +54,7 @@ module TSOS {
 
             document.getElementById("divStatus").innerHTML = "Status: "+_Status;
 
-            this.memDisplay();
+
 
 
 
@@ -195,19 +202,6 @@ module TSOS {
             this.krnShutdown();
         }
 
-        public memDisplay() {
-            var mem = "";
 
-            for (var i = 0; i < _Memory.memoryArray.length; i++){
-
-                if (i%10 == 0 && i != 0) {
-                    mem += "\n";
-                }
-                mem += "["+_Memory.memoryArray[i]+ "] ";
-
-            }
-            document.getElementById("memDisp").innerHTML = mem;
-
-        }
     }
 }

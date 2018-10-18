@@ -69,7 +69,10 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellBreak, "break", "- We have broken him.");
             this.commandList[this.commandList.length] = sc;
             //load
-            sc = new TSOS.ShellCommand(this.load, "load", "- Loads from taInput");
+            sc = new TSOS.ShellCommand(this.load, "load", "- Loads hexcode into memory");
+            this.commandList[this.commandList.length] = sc;
+            //run
+            sc = new TSOS.ShellCommand(this.run, "run", "- Executes the selected code");
             this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
@@ -369,13 +372,30 @@ var TSOS;
                 }
             }
             if (valid) {
-                _StdOut.putText("Valid");
+                _StdOut.putText("Loaded");
+                _StdOut.advanceLine();
+                /*_StdOut.putText(_CPU.parseCommand(userInput).toString());
+                _StdOut.advanceLine();
+                _StdOut.putText("Command: "+_CPU.parseCommand(userInput)[0].command);
+                _StdOut.advanceLine();
+                _StdOut.putText("Contents: "+_CPU.parseCommand(userInput)[0].contents.toString());
+                _StdOut.advanceLine();
+                _StdOut.putText("Command: "+_CPU.parseCommand(userInput)[1].command);
+                _StdOut.advanceLine();
+                _StdOut.putText("Contents: "+_CPU.parseCommand(userInput)[1].contents.toString());
+                _StdOut.advanceLine();*/
+                //_StdOut.putText(_CPU.displayCommandList(_CPU.parseCommand(userInput)));
+                //_CPU.excecuteCommand(_CPU.parseCommand(userInput));
+                _CPU.loadCommand(_PID, userInput);
+                _StdOut.putText("PID: " + _PID);
+                _PID++;
             }
             else {
-                _StdOut.putText("nah");
+                _StdOut.putText("Load Failure, use proper format.");
             }
-            _StdOut.putText("PID: " + _PID);
-            _PID++;
+        };
+        Shell.prototype.run = function (PID) {
+            _CPU.excecuteCommand(PID);
         };
         return Shell;
     }());

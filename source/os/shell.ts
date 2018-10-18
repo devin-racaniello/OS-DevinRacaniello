@@ -120,7 +120,13 @@ module TSOS {
             //load
             sc = new ShellCommand(this.load,
                 "load",
-                "- Loads from taInput");
+                "- Loads hexcode into memory");
+            this.commandList[this.commandList.length] = sc;
+
+            //run
+            sc = new ShellCommand(this.run,
+                "run",
+                "- Executes the selected code");
             this.commandList[this.commandList.length] = sc;
 
             // ps  - list the running processes and their IDs
@@ -440,16 +446,34 @@ module TSOS {
             }
 
             if(valid){
-                _StdOut.putText("Valid");
+                _StdOut.putText("Loaded");
+                _StdOut.advanceLine();
+                /*_StdOut.putText(_CPU.parseCommand(userInput).toString());
+                _StdOut.advanceLine();
+                _StdOut.putText("Command: "+_CPU.parseCommand(userInput)[0].command);
+                _StdOut.advanceLine();
+                _StdOut.putText("Contents: "+_CPU.parseCommand(userInput)[0].contents.toString());
+                _StdOut.advanceLine();
+                _StdOut.putText("Command: "+_CPU.parseCommand(userInput)[1].command);
+                _StdOut.advanceLine();
+                _StdOut.putText("Contents: "+_CPU.parseCommand(userInput)[1].contents.toString());
+                _StdOut.advanceLine();*/
+                //_StdOut.putText(_CPU.displayCommandList(_CPU.parseCommand(userInput)));
+                //_CPU.excecuteCommand(_CPU.parseCommand(userInput));
+                _CPU.loadCommand(_PID,userInput);
+                _StdOut.putText("PID: "+_PID);
+                _PID ++;
             } else {
-                _StdOut.putText("nah");
+                _StdOut.putText("Load Failure, use proper format.");
             }
 
-            _StdOut.putText("PID: "+_PID);
-            _PID ++;
-
-
         }
+
+        public run(PID) {
+            _CPU.excecuteCommand(PID);
+        }
+
+
 
 
 

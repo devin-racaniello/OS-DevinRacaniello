@@ -51,7 +51,7 @@ module TSOS {
                 _KernelInputQueue.enqueue(chr);
             } else if (((keyCode >= 48) && (keyCode <= 57) && (!isShifted)) ||   // digits
                         (keyCode == 32)                     ||   // space
-                        (keyCode == 13) ||                        // enter
+                        (keyCode == 13) ||                       // enter
                         (keyCode == 8)  || (keyCode == 9)   ||   // backspace //tab
                         (keyCode == 38) || (keyCode == 40)) {    // upArrow //downArrow
 
