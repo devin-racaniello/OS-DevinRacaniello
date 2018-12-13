@@ -19,7 +19,7 @@ module TSOS {
         public init(): void {
             var mem;
 
-            for (var i = 0; i <= 9999; i++){
+            for (var i = 0; i <= 65535; i++){
                 mem = new Memory("00",i);
                 this.memoryArray[this.memoryArray.length] = mem;
             }
@@ -30,6 +30,10 @@ module TSOS {
             sMem = new Memory(value,location);
             this.memoryArray[location] = sMem;
             this.memDisplay();
+        }
+
+        public hexToInt(hex) {
+            return(parseInt(hex, 16));
         }
 
         public getMemory(location) {

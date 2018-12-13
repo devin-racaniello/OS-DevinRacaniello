@@ -25,6 +25,12 @@ module TSOS {
         public processTable = [];
         public assemblyCommands = [];
 
+        public curPID = 0;
+        public doCommand = false;
+        public opNum = 0;
+        public commandArray = [];
+        public output;
+        public branch = 0;
 
 
         constructor(public PC: number = 0,
@@ -99,6 +105,97 @@ module TSOS {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
+
+            if (this.doCommand) {
+                this.commandArray = this.parseCommand(this.codeFromMem(this.curPID));
+                this.opNum = 0;
+                this.clearCode(this.curPID);
+
+                this.doCommand = false;
+            }
+
+            if (this.opNum < this.commandArray.length+this.branch){
+
+                switch (this.commandArray[this.opNum].command) {
+                    case "A9":
+                        this.setAcc(parseInt(this.commandArray[this.opNum].contents[0]));
+                        break;
+
+                    case "AD":
+                        this.setAcc(_MemoryAccesor.getMemory(this.hexToInt(this.commandArray[this.opNum].contents[1]+this.commandArray[this.opNum].contents[0])).value);
+                        break;
+
+                    case "8D":
+                        _MemoryAccesor.setMemory(this.Acc,this.hexToInt(this.commandArray[this.opNum].contents[1]+this.commandArray[this.opNum].contents[0]));
+                        break;
+
+                    case "6D":
+                        this.setAcc(this.Acc + _MemoryAccesor.getMemory(this.hexToInt(this.commandArray[this.opNum].contents[1]+this.commandArray[this.opNum].contents[0])).value);
+                        break;
+
+                    case "A2":
+                        this.setX(parseInt(this.commandArray[this.opNum].contents[0]));
+                        break;
+
+                    case "AE":
+                        this.setX(_MemoryAccesor.getMemory(this.hexToInt(this.commandArray[this.opNum].contents[1]+this.commandArray[this.opNum].contents[0])).value);
+                        break;
+
+                    case "A0":
+                        this.setY(parseInt(this.commandArray[this.opNum].contents[0]));
+                        break;
+
+                    case "AC":
+                        this.setY(_MemoryAccesor.getMemory(this.hexToInt(this.commandArray[this.opNum].contents[1]+this.commandArray[this.opNum].contents[0])));
+                        break;
+
+                    case "00":
+                        this.opNum = this.commandArray.length;
+                        break;
+
+                    case "EC":
+                        if (this.Xreg == _MemoryAccesor.getMemory(this.hexToInt(this.commandArray[this.opNum].contents[1]+this.commandArray[this.opNum].contents[0])).value){
+                            this.Zflag = 0;
+                        }
+                        break;
+
+                    case "D0":
+                        //this.setAcc(command[1]);
+                        break;
+
+                    case "EE":
+                        _MemoryAccesor.setMemory(
+                            (parseInt(_MemoryAccesor.getMemory(this.hexToInt(this.commandArray[this.opNum].contents[1]+this.commandArray[this.opNum].contents[0])).value)+1).toString(16),
+                            this.hexToInt(this.commandArray[this.opNum].contents[1]+this.commandArray[this.opNum].contents[0]));
+                        break;
+
+                    case "FF":
+                        if(this.Xreg == 1) {
+                            this.output = this.Yreg;
+                        }
+                        if(this.Xreg == 2) {
+                            var j = 0;
+                            this.output = "";
+                            while (_MemoryAccesor.getMemory(this.hexToInt(this.commandArray[this.opNum].contents[1]+this.commandArray[this.opNum].contents[0])).value+j !== "00" ){
+
+                                this.output += _MemoryAccesor.getMemory(this.hexToInt(this.commandArray[this.opNum].contents[1]+this.commandArray[this.opNum].contents[0])).value+j
+                                j++
+                            }
+                        }
+                        break;
+
+                }
+                this.opNum++;
+                this.displayCPU();
+            } else {
+                this.isExecuting = false;
+            }
+
+
+
+
+
+
         }
 
         public setAcc(input): void {
@@ -125,6 +222,10 @@ module TSOS {
             this.processTable.push(proc);
             this.displayTable();
 
+        }
+
+        public hexToInt(hex) {
+            return(parseInt(hex, 16));
         }
 
         public displayCommandList(commandArray) {
@@ -255,7 +356,7 @@ module TSOS {
                     this.ar = commandArray;
                 }
             }*/
-
+            this.commandArray = commandArray;
             return commandArray;
 
 
@@ -264,7 +365,11 @@ module TSOS {
 
         public excecuteCommand(PID) {
 
-            var commandArray = this.parseCommand(this.codeFromMem(PID));
+            this.isExecuting = true;
+            this.doCommand = true;
+            this.curPID = PID;
+
+            /*var commandArray = this.parseCommand(this.codeFromMem(PID));
             this.clearCode(PID);
             var breaker = false;
 
@@ -343,10 +448,10 @@ module TSOS {
                         break;
 
                 }
-            }
+            }*/
 
 
-            this.displayCPU();
+
 
 
         }
